@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue Jan 14 21:25:24 2020
+Created on Wed Jan 15 10:05:37 2020
 
 @author: 15608
 """
@@ -50,9 +50,6 @@ class LogisticRegression:
         y_hat[y_hat<0.5] = -1
         return np.sum(y!=y_hat)/y.size
         
-model = LogisticRegression()
+model = LogisticRegression(eta=0.01)
 model.train(X_train,y_train)
 print("E_out: {}".format(model.err(X_test, y_test)))    
-    
-    
-    

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue Jan 14 21:25:24 2020
+Created on Wed Jan 15 10:07:47 2020
 
 @author: 15608
 """
@@ -18,26 +18,21 @@ y_train = train_data[:, 20]
 X_test = test_data[:, :20]
 y_test = test_data[:, 20]
 
-class LogisticRegression:
+class LogisticRegressionWithSGD:
     
     def __init__(self, eta=0.001, times=2000):
         self.eta=eta
         self.times=times
-        
-    def gradient(self, X, y):
-        gt=0;
-        for i in range(X.shape[0]):
-            xn = X[i,:]
-            yn = y[i]
-            gt+=yn*xn/(1+np.exp(yn*xn.dot(self.w_)))
-        return gt*(-1/X.shape[0])
     
     def train(self, X, y):
         X = np.c_[np.ones(X.shape[0]), X]
         self.w_ = np.zeros(X.shape[1])
         
         for i in range(self.times):
-            vt = -self.gradient(X, y)
+            i = i%X.shape[0]
+            xn = X[i,:]
+            yn = y[i]
+            vt = self.sigmoid(-yn*xn.dot(self.w_))*yn*xn
             self.w_ = self.w_ + self.eta*vt
     
     def sigmoid(self, x):
@@ -50,9 +45,6 @@ class LogisticRegression:
         y_hat[y_hat<0.5] = -1
         return np.sum(y!=y_hat)/y.size
         
-model = LogisticRegression()
+model = LogisticRegressionWithSGD()
 model.train(X_train,y_train)
-print("E_out: {}".format(model.err(X_test, y_test)))    
-    
-    
-    
+print("E_out: {}".format(model.err(X_test, y_test)))   
